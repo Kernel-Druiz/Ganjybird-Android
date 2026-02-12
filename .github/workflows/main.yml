@@ -16,7 +16,6 @@ jobs:
         with:
           app_name: "Ganjybird"
           bundle_id: "com.druiz.ganjybird"
-          # Aquí configuramos tus iconos y splash screen
           icon_file: "game_icon.png"
           version_name: "1.0.0"
           version_code: 1
