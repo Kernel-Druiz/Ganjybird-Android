@@ -21,7 +21,11 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Clone Love-Android
-        run: git clone --recursive https://github.com/love2d/love-android-project.git love-android
+        uses: actions/checkout@v4
+        with:
+          repository: love2d/love-android-project
+          path: love-android
+          submodules: recursive
 
       - name: Package Game
         run: |
@@ -44,6 +48,7 @@ jobs:
             convert game_icon.png -resize 192x192 love-android/app/src/main/res/drawable-xxxhdpi/love.png
           fi
           if [ -f "spec.png" ]; then
+            mkdir -p love-android/app/src/main/res/drawable-nodpi
             cp spec.png love-android/app/src/main/res/drawable-nodpi/ext_logo.png
           fi
 
