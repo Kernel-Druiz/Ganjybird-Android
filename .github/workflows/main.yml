@@ -21,11 +21,8 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Clone Love-Android
-        uses: actions/checkout@v4
-        with:
-          repository: love2d/love-android-project
-          path: love-android
-          submodules: recursive
+        run: |
+          git clone --recursive https://github.com/love2d/love-android.git love-android
 
       - name: Package Game
         run: |
