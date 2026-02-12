@@ -17,6 +17,9 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
 
@@ -32,7 +35,9 @@ jobs:
 
       - name: Customize App Metadata
         run: |
-          grep -rl "org.love2d.android" love-android | xargs sed -i 's/org.love2d.android/com.druiz.ganjybird/g'
+          # CAMBIO QUIRÚRGICO: Solo en el archivo de configuración de Android
+          sed -i 's/applicationId "org.love2d.android"/applicationId "com.druiz.ganjybird"/g' love-android/app/build.gradle
+          # Cambiar el nombre visual de la App
           find love-android -name "strings.xml" -exec sed -i 's/LÖVE for Android/Ganjybird/g' {} +
 
       - name: Generate Icons and Splash
@@ -53,7 +58,6 @@ jobs:
         working-directory: ./love-android
         run: |
           chmod +x gradlew
-          # Usamos --no-daemon para evitar problemas de memoria y la tarea específica que no da error
           ./gradlew assembleNormalNoRecordDebug --no-daemon
 
       - name: Upload APK
