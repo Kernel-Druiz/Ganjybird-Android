@@ -56,10 +56,10 @@ jobs:
         working-directory: ./love-android
         run: |
           chmod +x gradlew
-          ./gradlew assembleNormalDebug
+          ./gradlew assembleNormalNoRecordDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Ganjybird-Debug-APK
-          path: love-android/app/build/outputs/apk/normal/debug/*.apk
+          path: love-android/app/build/outputs/apk/normalNoRecord/debug/*.apk
