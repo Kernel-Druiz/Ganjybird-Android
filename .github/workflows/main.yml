@@ -32,8 +32,10 @@ jobs:
 
       - name: Customize App Metadata
         run: |
-          sed -i 's/org.love2d.android/com.druiz.ganjybird/g' love-android/app/build.gradle
-          sed -i 's/LÖVE for Android/Ganjybird/g' love-android/app/src/main/res/values/strings.xml
+          # Cambiar el ID del paquete en todo el proyecto
+          grep -rl "org.love2d.android" love-android | xargs sed -i 's/org.love2d.android/com.druiz.ganjybird/g'
+          # Buscar y cambiar el nombre de la app donde sea que esté el strings.xml
+          find love-android -name "strings.xml" -exec sed -i 's/LÖVE for Android/Ganjybird/g' {} +
 
       - name: Generate Icons and Splash
         run: |
