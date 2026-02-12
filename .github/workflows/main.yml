@@ -11,8 +11,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build Android APK
-        uses: love2d/love-android-action@v1
+      - name: set up JDK 17
+        uses: actions/setup-java@v4
         with:
-          bundle-id: "com.druiz.ganjybird"
-          app-name: "Ganjybird"
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Clone Love-Android
+        run: git clone --recursive https://github.com/love2d/love-android-project.git love-android
+
+      - name: Package Game
+        run: |
+          zip -9 -r ganjybird.love . -x ".git/*" ".github/*" "love-android/*"
+          mkdir -p love-android/app/src/main/assets
+          cp ganjybird.love love-android/app/src/main/assets/game.love
+
+      - name: Customize App Metadata
+        run: |
+          sed -i 's/org.love2d.android/com.druiz.ganjybird/g' love-android/app/build.gradle
+          sed -i 's/LÖVE for Android/Ganjybird/g' love-android/app/src/main/res/values/strings.xml
+
+      - name: Generate Icons and Splash
+        run: |
+          if [ -f "game_icon.png" ]; then
+            convert game_icon.png -resize 48x48 love-android/app/src/main/res/drawable-mdpi/love.png
+            convert game_icon.png -resize 72x72 love-android/app/src/main/res/drawable-hdpi/love.png
+            convert game_icon.png -resize 96x96 love-android/app/src/main/res/drawable-xhdpi/love.png
+            convert game_icon.png -resize 144x144 love-android/app/src/main/res/drawable-xxhdpi/love.png
+            convert game_icon.png -resize 192x192 love-android/app/src/main/res/drawable-xxxhdpi/love.png
+          fi
+          if [ -f "spec.png" ]; then
+            cp spec.png love-android/app/src/main/res/drawable-nodpi/ext_logo.png
+          fi
+
+      - name: Build APK
+        working-directory: ./love-android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleNormalDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ganjybird-Debug-APK
+          path: love-android/app/build/outputs/apk/normal/debug/*.apk
