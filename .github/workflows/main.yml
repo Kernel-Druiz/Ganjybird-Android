@@ -3,18 +3,16 @@ name: Build Ganjybird APK
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build Android APK
-        uses: love-actions/love-actions-android@v1.1.3
+        uses: love2d/love-android-action@v1
         with:
-          bundleId: "com.druiz.ganjybird"
-          appName: "Ganjybird"
+          bundle-id: "com.druiz.ganjybird"
+          app-name: "Ganjybird"
