@@ -20,6 +20,9 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: Install ImageMagick
+        run: sudo apt-get update && sudo apt-get install -y imagemagick
+
       - name: Clone Love-Android
         run: |
           git clone --recursive https://github.com/love2d/love-android.git love-android
@@ -32,9 +35,7 @@ jobs:
 
       - name: Customize App Metadata
         run: |
-          # Cambiar el ID del paquete en todo el proyecto
           grep -rl "org.love2d.android" love-android | xargs sed -i 's/org.love2d.android/com.druiz.ganjybird/g'
-          # Buscar y cambiar el nombre de la app donde sea que esté el strings.xml
           find love-android -name "strings.xml" -exec sed -i 's/LÖVE for Android/Ganjybird/g' {} +
 
       - name: Generate Icons and Splash
